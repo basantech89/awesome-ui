@@ -1,0 +1,59 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@3.2.2
+
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:16.13.1'
+    parallelism: 8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Installation
+          command: yarn install
+      - run:
+          name: Test runner
+          command: yarn test:report
+      - run:
+          name: Build
+          command: yarn build
+      - when:
+          condition:
+            not:
+              equal: [ main, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: Setup Code Climate test-reporter
+                command: |
+                  # download test reporter as a static binary
+                  curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+                  chmod +x ./cc-test-reporter
+                  ./cc-test-reporter before-build
+            - codecov/upload:
+                file: './coverage/lcov.info'
+            - run:
+                name: Send coverage to Code Climate
+                command: ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
+            - run:
+                name: Chromatic Release
+                command: yarn chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+            - run:
+                name: NPM Release Dry Run
+                command: npm run semantic-release --dry-run || true
+      - when:
+          condition:
+            equal: [ main, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: NPM Release
+                command: npm run semantic-release || true
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build

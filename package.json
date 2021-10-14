@@ -19,21 +19,31 @@
   "files": [
     "dist"
   ],
+  "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "cross-env BABEL_ENV=production babel src -d dist",
+    "build:dev": "babel src -d dist --extensions \".js,.jsx,.ts,.tsx\" --ignore \"**/*.test.ts\" --ignore \"**/*.stories.tsx\"",
+    "build": "yarn build:types && cross-env BABEL_ENV=production babel src -d dist --extensions \".js,.jsx,.ts,.tsx\" --ignore \"**/*.test.ts\" --ignore \"**/*.stories.tsx\"",
+    "watch:types": "tsc --noEmit -w",
+    "lint": "eslint --ext js,jsx,ts,tsx ./src",
+    "lint:types": "tsc --noEmit",
+    "lint:fix": "eslint --ext js,jsx,ts,tsx --fix ./src",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
     "build-storybook-docs": "build-storybook -s public --docs",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "test": "jest --env=jsdom",
-    "test:cov": "yarn test --coverage"
+    "test": "cross-env CI=true jest --env=jsdom",
+    "test:cov": "yarn test --coverage",
+    "chromatic": "npx chromatic --project-token=fbce5e85fbe8",
+    "prepare": "husky install",
+		"lint:staged": "yarn lint:types && yarn test"
   },
   "devDependencies": {
+    "@awesome-tools/eslint-config": "^1.0.0",
+    "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-react": "^7.14.5",
-    "@emotion/css": "^11.1.3",
-    "@emotion/react": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
+    "@babel/preset-typescript": "^7.15.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
@@ -44,30 +54,38 @@
     "@storybook/node-logger": "^6.3.5",
     "@storybook/react": "^6.3.5",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.172",
     "@types/react": "^17.0.9",
     "@types/react-dom": "^17.0.6",
-    "@types/styled-components": "^5.1.10",
     "babel-loader": "^8.2.2",
-    "chroma-js": "^2.1.2",
+    "chromatic": "^5.10.0-canary.0",
     "cross-env": "^7.0.3",
     "csstype": "^3.0.8",
+    "eslint-config-storybook": "^0.1.0",
+    "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.4",
+    "lint-staged": "^11.2.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.3.2"
+    "husky": "^7.0.0"
   },
-  "keywords": [
-    "typescript",
-    "react",
-    "storybook"
-  ],
   "dependencies": {
+    "@emotion/css": "^11.1.3",
+    "@emotion/react": "^11.4.1",
     "lodash": "^4.17.21",
     "polished": "^4.1.3",
-    "styled-components": "^5.3.0"
+    "typescript": "^4.4.3"
   },
   "peerDependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "react",
+    "storybook",
+    "awesome",
+    "awesome-tools",
+    "awesome-ui"
+  ]
 }

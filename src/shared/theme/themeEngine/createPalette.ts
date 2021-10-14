@@ -1,52 +1,28 @@
-import chroma from 'chroma-js'
-
 import { deepMerge } from '../../../utils'
 import colors from './colors'
-import { Palette, PaletteOptions } from './palette'
+import {
+  Color,
+  DefaultColor,
+  Palette,
+  PaletteDefaultOptions,
+  PaletteOptions
+} from './palette.types'
+import { contrast } from '../../../utils/theme'
 
-export const defaultPaletteOptions = {
+export const defaultPaletteOptions: PaletteDefaultOptions = {
   colors,
-  primary: {
-    light: colors.kesari[300],
-    main: colors.kesari[500],
-    dark: colors.kesari[700]
-  },
-  secondary: {
-    light: colors.rose[300],
-    main: colors.rose[500],
-    dark: colors.rose[700]
-  },
-  tertiary: {
-    light: colors.mango[300],
-    main: colors.mango[500],
-    dark: colors.mango[700],
-    contrast: colors.mango.contrast[500]
-  },
-  error: {
-    light: colors.strawberry[300],
-    main: colors.strawberry[500],
-    dark: colors.strawberry[700]
-  },
-  warning: {
-    light: colors.candy[300],
-    main: colors.candy[500],
-    dark: colors.candy[700]
-  },
-  info: {
-    light: colors.sky[300],
-    main: colors.sky[500],
-    dark: colors.sky[700]
-  },
-  success: {
-    light: colors.emerald[300],
-    main: colors.emerald[500],
-    dark: colors.emerald[700]
-  },
+  primary: colors.kesari,
+  secondary: colors.rose,
+  tertiary: colors.mango,
+  error: colors.strawberry,
+  warning: colors.candy,
+  info: colors.sky,
+  success: colors.emerald,
   background: {
     default: '',
     paper: ''
   },
-  contrastThreshold: 2
+  contrastThreshold: 1.9
 }
 
 const dark = {
@@ -70,20 +46,30 @@ export const light = {
   }
 }
 
-export default function createPalette(
-  paletteOptions: PaletteOptions = defaultPaletteOptions
-): Palette {
-  const { primary, secondary, tertiary, info, error, success, warning, ...rest } = paletteOptions
+export default function createPalette(paletteOptions: PaletteOptions = {}): Palette {
+  const allPaletteOptions = deepMerge(defaultPaletteOptions, paletteOptions)
+  const {
+    primary,
+    secondary,
+    tertiary,
+    info,
+    error,
+    success,
+    warning,
+    contrastThreshold,
+    ...rest
+  } = allPaletteOptions
 
-  const getContrastColor = color => {
-    let contrast
-    if (color.contrast) {
-      contrast = chroma.contrast(color.main, color.contrast)
-      if (contrast >= paletteOptions.contrastThreshold) {
+  const getContrastColor = (color: DefaultColor & Color) => {
+    let contrastColor
+    if (color?.contrast) {
+      contrastColor = contrast(color[500], color.contrast)
+      if (contrastColor >= contrastThreshold) {
         return color.contrast
       }
     }
-    return chroma.contrast(color.main, dark.text.primary) >= paletteOptions.contrastThreshold
+
+    return contrast(color[500], dark.text.primary) >= contrastThreshold
       ? dark.text.primary
       : light.text.primary
   }
@@ -96,7 +82,6 @@ export default function createPalette(
     success: { ...success, contrast: getContrastColor(success) },
     info: { ...info, contrast: getContrastColor(info) },
     warning: { ...warning, contrast: getContrastColor(warning) },
-    background: paletteOptions.background,
-    colors: paletteOptions.colors
+    ...rest
   }
 }

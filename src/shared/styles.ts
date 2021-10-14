@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import { css } from 'styled-components'
+import { css } from '@emotion/css'
 
 // Global style variables
 export const background = {

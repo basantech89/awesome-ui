@@ -1,4 +1,4 @@
-import { Colors } from './palette'
+import { Colors } from './palette.types'
 
 const colors: Colors = {
   helper: {
@@ -211,10 +211,7 @@ const colors: Colors = {
     600: '#d97706',
     700: '#b45309',
     800: '#92400e',
-    900: '#78350f',
-    contrast: {
-      500: '#293250'
-    }
+    900: '#78350f'
   },
   kesari: {
     50: '#fff7ed',

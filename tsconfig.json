@@ -1,16 +1,4 @@
 {
-	"compileOnSave": true,
-	"compilerOptions": {
-		"target": "es6",
-		"sourceMap": true,
-		"esModuleInterop": true,
-		"module": "esnext",
-		"moduleResolution": "node",
-		"jsx": "react",
-		"lib": ["dom", "es2017"],
-		"jsxImportSource": "@emotion/react"
-	},
-	"exclude": [
-		"node_modules"
-	]
+	"extends": "../../tsconfig.json",
+	"include": ["src"]
 }

@@ -1,6 +1,5 @@
-import { useTheme } from 'styled-components'
-
 import { get } from './object'
+import { useTheme } from '@emotion/react'
 
 export const useAwesomeStyles = (componentName: string, props: any = {}) => {
   const theme = useTheme()

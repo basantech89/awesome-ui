@@ -1,20 +1,19 @@
 import { Theme } from '@emotion/react'
 
-import { deepMerge } from '../../../utils'
-import createComponentStyles from './componentStyles/createComponentStyles'
+import createConfig from './componentConfig/createConfig'
 import createPalette from './createPalette'
 import createSpacing from './createSpacing'
 import createTypography from './createTypography'
-import { CreateTheme } from './types'
+import { CreateTheme } from '../theme.types'
 
-const createTheme: CreateTheme = (options, ...args) => {
-  let awesomeTheme: Theme = {
+const createTheme: CreateTheme = options => {
+  const awesomeTheme: Theme = {
     typography: createTypography(options?.typographyOptions),
     palette: createPalette(options?.paletteOptions),
     spacing: createSpacing(options?.spacingOptions),
-    componentStyles: createComponentStyles()
+    config: createConfig(options?.configOptions)
   }
-  awesomeTheme = args.reduce((acc, argument) => deepMerge(acc, argument), awesomeTheme)
+
   return awesomeTheme
 }
 

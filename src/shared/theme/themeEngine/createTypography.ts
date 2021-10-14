@@ -1,5 +1,7 @@
+import * as React from 'react'
+
 import { deepMerge } from '../../../utils'
-import { Typography, TypographyOptions } from './typography'
+import { Typography, TypographyDefaultOptions, TypographyOptions } from './typography.types'
 
 const defaultFontFamily = 'Poppins, Helvetica, Arial, sans-serif'
 
@@ -7,17 +9,17 @@ const caseAllCaps = {
   textTransform: 'uppercase'
 }
 
-function round(value) {
+function round(value: number) {
   return Math.round(value * 1e5) / 1e5
 }
 
-const getCoefficient = fontSize => fontSize / 14
+const getCoefficient = (fontSize: number) => fontSize / 14
 
 const defaultHtmlFontSize = 16
 const defaultFontSize = 14
 let coefficient = getCoefficient(defaultFontSize)
 
-export const defaultTypographyOptions: TypographyOptions = {
+export const defaultTypographyOptions: TypographyDefaultOptions = {
   fontFamily: defaultFontFamily,
   fontWeightLight: 300,
   fontWeightRegular: 400,
@@ -29,9 +31,9 @@ export const defaultTypographyOptions: TypographyOptions = {
   pxToRem: size => `${(size / defaultHtmlFontSize) * coefficient}rem`
 }
 
-export default function createTypography(
-  typographyOption: TypographyOptions = defaultTypographyOptions
-): Typography {
+export default function createTypography(typographyOption: TypographyOptions = {}): Typography {
+  const options = deepMerge(typographyOption, defaultTypographyOptions)
+
   const {
     fontFamily,
     fontWeightLight,
@@ -42,11 +44,17 @@ export default function createTypography(
     htmlFontSize,
     pxToRem,
     ...typographyRest
-  } = typographyOption
+  } = options
 
   coefficient = getCoefficient(fontSize)
   const defaultPxToRem = pxToRem || (size => `${(size / htmlFontSize) * coefficient}rem`)
-  const buildVariant = (fontWeight, size, lineHeight, letterSpacing, casing?) => ({
+  const buildVariant = (
+    fontWeight: React.CSSProperties['fontWeight'],
+    size: number,
+    lineHeight: number,
+    letterSpacing: number,
+    casing?: typeof caseAllCaps
+  ) => ({
     fontFamily,
     fontWeight,
     fontSize: defaultPxToRem(size),
