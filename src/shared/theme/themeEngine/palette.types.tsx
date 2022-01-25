@@ -1,4 +1,6 @@
 import { BrandColor } from '../../../types'
+import React from 'react'
+import { DeepRequired } from '../../../utils/utils.types'
 
 declare interface MainColor {
   500: string
@@ -84,19 +86,22 @@ type Background = {
   paper?: string
 }
 
-declare interface WholeColor extends DefaultColor {
-  contrast: string
+export declare interface TextColors {
+  primary?: React.CSSProperties['color']
+  secondary?: React.CSSProperties['color']
+  disabled?: React.CSSProperties['color']
+  icon?: React.CSSProperties['color']
 }
 
-export declare type ColorVariant = Record<BrandColor, WholeColor>
-
-export declare interface Palette extends ColorVariant {
-  colors: Colors
-  background: Required<Background>
+export declare interface SupplementColors {
+  text?: {
+    light?: TextColors
+    dark?: TextColors
+  }
 }
 
 export declare interface PaletteOptions {
-  colors?: Partial<DeepPartialColors>
+  colors?: SupplementColors
   primary?: Color
   secondary?: Color
   tertiary?: Color
@@ -109,7 +114,7 @@ export declare interface PaletteOptions {
 }
 
 export declare interface PaletteDefaultOptions {
-  colors: Colors
+  colors: DeepRequired<SupplementColors>
   primary: DefaultColor
   secondary: DefaultColor
   tertiary: DefaultColor
@@ -119,4 +124,15 @@ export declare interface PaletteDefaultOptions {
   info: DefaultColor
   background: Required<Background>
   contrastThreshold: number
+}
+
+export declare interface PaletteColor extends DefaultColor {
+  contrast: string
+}
+
+export declare type ColorVariant = Record<BrandColor, PaletteColor>
+
+export declare interface Palette extends ColorVariant {
+  background: Required<Background>
+  colors: DeepRequired<SupplementColors>
 }

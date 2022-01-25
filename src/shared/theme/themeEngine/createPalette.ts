@@ -5,12 +5,36 @@ import {
   DefaultColor,
   Palette,
   PaletteDefaultOptions,
-  PaletteOptions
+  PaletteOptions,
+  SupplementColors
 } from './palette.types'
 import { contrast } from '../../../utils/theme'
+import { DeepRequired } from '../../../utils/utils.types'
+
+const dark = {
+  primary: colors.coolGray['700'],
+  secondary: colors.coolGray['500'],
+  disabled: 'rgba(255, 255, 255, 0.5)',
+  icon: 'rgba(255, 255, 255, 0.5)'
+}
+
+export const light = {
+  // The colors used to style the text.
+  // The most important text.
+  primary: colors.gray['300'],
+  // Secondary text.
+  secondary: colors.blueGray['200'],
+  // Disabled text have even lower visual prominence.
+  disabled: 'rgba(0, 0, 0, 0.38)',
+  icon: 'rgba(255, 255, 255, 0.5)'
+}
+
+const text = { light, dark }
+
+const supplementColors: DeepRequired<SupplementColors> = { text }
 
 export const defaultPaletteOptions: PaletteDefaultOptions = {
-  colors,
+  colors: supplementColors,
   primary: colors.kesari,
   secondary: colors.rose,
   tertiary: colors.mango,
@@ -23,27 +47,6 @@ export const defaultPaletteOptions: PaletteDefaultOptions = {
     paper: ''
   },
   contrastThreshold: 1.9
-}
-
-const dark = {
-  text: {
-    primary: colors.common.white,
-    secondary: 'rgba(255, 255, 255, 0.7)',
-    disabled: 'rgba(255, 255, 255, 0.5)',
-    icon: 'rgba(255, 255, 255, 0.5)'
-  }
-}
-
-export const light = {
-  // The colors used to style the text.
-  text: {
-    // The most important text.
-    primary: 'rgba(0, 0, 0, 0.87)',
-    // Secondary text.
-    secondary: 'rgba(0, 0, 0, 0.6)',
-    // Disabled text have even lower visual prominence.
-    disabled: 'rgba(0, 0, 0, 0.38)'
-  }
 }
 
 export default function createPalette(paletteOptions: PaletteOptions = {}): Palette {
@@ -69,9 +72,9 @@ export default function createPalette(paletteOptions: PaletteOptions = {}): Pale
       }
     }
 
-    return contrast(color[500], dark.text.primary) >= contrastThreshold
-      ? dark.text.primary
-      : light.text.primary
+    return contrast(color[500], colors.common.white) >= contrastThreshold
+      ? colors.common.white
+      : 'rgba(0, 0, 0, 0.87)'
   }
 
   return {

@@ -4,25 +4,18 @@ import React from 'react'
 import { ThemeButtonProps, ButtonVariant } from '../../../../../components/form'
 import { CommonElementSize } from '../../../../../types'
 import { DeepPartialRequired, DeepRequired } from '../../../../../utils/utils.types'
-import { ComponentConfig } from '../componentConfig.types'
-
-type SizeConfig = {
-  px: string
-  py: string
-  fontSize: string
-  borderRadius: string
-}
+import { BoxSizeConfig } from '../common'
 
 export type SizingOption = {
-  rounded?: Record<CommonElementSize, SizeConfig>
-  square?: Record<CommonElementSize, SizeConfig>
+  rounded?: Record<CommonElementSize, BoxSizeConfig>
+  square?: Record<CommonElementSize, BoxSizeConfig>
 }
 
 export declare interface ButtonThemeOptions {
   default?: ThemeButtonProps
+  base?: CSSInterpolation
   sizing?: SizingOption
   variant?: Partial<Record<ButtonVariant, React.CSSProperties>>
-  base?: CSSInterpolation
 }
 
 export declare interface DefaultButtonThemeOptions {
@@ -32,11 +25,7 @@ export declare interface DefaultButtonThemeOptions {
   sizing: DeepRequired<SizingOption>
 }
 
-export type ComponentOptions = DeepPartialRequired<ThemeButtonProps, 'spinner' | 'icon'> & {
+export type ButtonComponentOptions = DeepPartialRequired<ThemeButtonProps, 'spinner' | 'icon'> & {
   spinnerColor: React.CSSProperties['color']
   spinnerSize: string
 }
-
-export declare type ButtonConfig = ComponentConfig<ThemeButtonProps, ComponentOptions>
-
-export declare type GenerateButtonConfig = (buttonThemeOptions?: ButtonThemeOptions) => ButtonConfig

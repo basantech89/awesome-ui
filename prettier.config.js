@@ -1,4 +1,4 @@
-const base = require('eslint-config-storybook/prettier.config')
+const base = require('@awesome-tools/eslint-config/prettier.config')
 
 module.exports = {
   ...base,
