@@ -1,5 +1,4 @@
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   // modulePathIgnorePatterns: [
@@ -7,14 +6,13 @@ module.exports = {
   // 	"<rootDir>/examples",
   // 	"<rootDir>/tooling/cra-template*",
   // ],
-  transform: {
-    '^.+\\.(ts|tsx)?$': 'ts-jest/dist'
-  },
-  transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$'],
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json'
+  collectCoverage: true,
+  coverageThreshold: {
+    global: {
+      branches: 20,
+      functions: 20,
+      lines: 20,
+      statements: 20
     }
   }
 }

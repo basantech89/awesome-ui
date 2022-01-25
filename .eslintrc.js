@@ -7,7 +7,7 @@ module.exports = {
   extends: ['@awesome-tools/eslint-config'],
   overrides: [
     {
-      files: ['**/*.tsx'],
+      files: ['**/*.tsx', '**/*.ts'],
       rules: {
         'react/prop-types': 'off',
         // note you must disable the base rule as it can report incorrect errors
@@ -15,11 +15,14 @@ module.exports = {
         '@typescript-eslint/no-use-before-define': ['error'],
         '@typescript-eslint/no-unused-vars': 'off',
         'no-unused-vars': 0,
-        '@typescript-eslint/no-unused-vars-experimental': 'error'
+        '@typescript-eslint/no-unused-vars-experimental': 'error',
+        // note you must disable the base rule as it can report incorrect errors
+        'no-redeclare': 'off',
+        '@typescript-eslint/no-redeclare': ['error']
       }
     }
   ],
   env: {
-		browser: true
-	}
+    browser: true
+  }
 }

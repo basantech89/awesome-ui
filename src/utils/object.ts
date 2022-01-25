@@ -1,15 +1,4 @@
-const isObject = (obj: any) => {
-  if (typeof obj === 'object' && obj !== null) {
-    if (typeof Object.getPrototypeOf === 'function') {
-      const prototype = Object.getPrototypeOf(obj)
-      return prototype === Object.prototype || prototype === null
-    }
-
-    return Object.prototype.toString.call(obj) === '[object Object]'
-  }
-
-  return false
-}
+import { isFaulty, isObject } from './assertion'
 
 type TUnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
   ? I
@@ -24,7 +13,7 @@ export const deepMerge = <T extends Record<string, any>[]>(
         result[key] = Array.from(new Set(result[key].concat(current[key])))
       } else if (isObject(result[key]) && isObject(current[key])) {
         result[key] = deepMerge(result[key], current[key])
-      } else {
+      } else if (!isFaulty(current[key])) {
         result[key] = current[key]
       }
     })
@@ -104,6 +93,19 @@ export const memoize = (fn: Get): Get => {
 }
 
 export const memoizedGet = memoize(get)
+
+export const mapKeys = <K extends string | number | symbol, V>(
+  obj: Record<string | number | symbol, V>,
+  keys: Array<K>
+): Record<K, NonNullable<V>> =>
+  Object.values(obj).reduce((mappedObj, value, index) => {
+    if (value) {
+      const key = keys[index]
+      // @ts-ignore
+      mappedObj[key] = value
+    }
+    return mappedObj
+  }, {} as Record<K, NonNullable<V>>)
 
 export { default as omit } from 'lodash/omit'
 export { default as pick } from 'lodash/pick'

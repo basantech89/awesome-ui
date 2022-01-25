@@ -1,28 +1,29 @@
 import { cx } from '@emotion/css'
-import { useTheme } from '@emotion/react'
 import React from 'react'
 
 import themingProps from '../../../constants/themingProps'
-import { BrandColor, CommonElementSize } from '../../../types'
+import { BrandColor } from '../../../types'
 import { omit } from '../../../utils'
+import useAwesomeStyles from '../../../shared/theme/useAwesomeStyles'
 
 export interface ThemeSpinnerProps {
   color?: BrandColor | string
   speed?: string
-  size?: CommonElementSize | string | number
+  size?: string | number
   thickness?: string
 }
 
 export type SpinnerProps = ThemeSpinnerProps & React.HTMLAttributes<HTMLSpanElement>
 
 const Spinner: React.FC<SpinnerProps> = props => {
-  const theme = useTheme()
-
   const { className, ...rest } = props
-  const { styles, componentOptions } = theme.config.spinner(rest, theme)
+  const {
+    styles: { main },
+    componentOptions
+  } = useAwesomeStyles(rest, 'spinner')
 
   return (
-    <span {...omit(componentOptions, themingProps.spinner)} className={cx(...styles, className)} />
+    <span {...omit(componentOptions, themingProps.spinner)} className={cx(...main, className)} />
   )
 }
 

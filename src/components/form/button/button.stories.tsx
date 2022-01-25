@@ -1,13 +1,14 @@
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Meta } from '@storybook/react'
+import { Meta, Story } from '@storybook/react'
 import * as React from 'react'
 import { BrandColor, CommonElementSize } from '../../../types'
 
 import { getDefaultButtonThemeOptions } from '../../../shared/theme/themeEngine/componentConfig/button'
-import Button, { ButtonVariant } from '.'
+import Button, { ButtonProps, ButtonVariant } from '.'
 import theme from '../../../shared/theme'
 import Box from '../../layout/box'
+import { css } from '@emotion/css'
 
 const defaultButtonThemeOptions = getDefaultButtonThemeOptions(theme.spacing)
 
@@ -48,14 +49,6 @@ export default {
   }
 } as Meta
 
-// const Template: Story<HTMLButtonProps> = args => <Button {...args} />
-
-//
-// export const Primary = Template.bind({})
-// Primary.args = {
-//   variant: 'primary',
-//   label: 'Button'
-// }
 //
 // export const Secondary = Template.bind({})
 // Secondary.args = {
@@ -248,3 +241,12 @@ export const disabled = ({ ...args }) => (
     ))}
   </>
 )
+
+const Template: Story<ButtonProps> = args => <Button {...args} />
+export const ClassName = Template.bind({})
+ClassName.args = {
+  className: css`
+    background-color: aqua;
+  `,
+  children: 'Button'
+}

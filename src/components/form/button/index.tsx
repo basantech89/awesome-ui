@@ -1,11 +1,11 @@
 import { css, cx } from '@emotion/css'
-import { useTheme } from '@emotion/react'
 import React from 'react'
 
 import { BrandColor, CommonElementPlacement, CommonElementSize } from '../../../types'
 import Spinner from '../../feedback/spinner'
 import { omit } from '../../../utils'
 import themingProps from '../../../constants/themingProps'
+import useAwesomeStyles from '../../../shared/theme/useAwesomeStyles'
 
 export declare type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'link'
 
@@ -50,9 +50,8 @@ const AwesomeButton: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonPro
   props,
   ref
 ) => {
-  const theme = useTheme()
   const { children, className, ...otherProps } = props
-  const { componentOptions, styles } = theme.config.button(otherProps, theme)
+  const { componentOptions, styles } = useAwesomeStyles<ButtonProps, 'button'>(otherProps, 'button')
 
   const {
     size,
@@ -77,7 +76,7 @@ const AwesomeButton: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonPro
     <button
       ref={ref}
       type='button'
-      className={cx(...styles, className)}
+      className={cx(...styles.main, className)}
       {...omit(rest, themingProps.button)}
     >
       {!loading && icon && iconPlacement === 'left' && (

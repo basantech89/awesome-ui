@@ -1,6 +1,5 @@
 import { Theme } from '@emotion/react'
 
-import createConfig from './componentConfig/createConfig'
 import createPalette from './createPalette'
 import createSpacing from './createSpacing'
 import createTypography from './createTypography'
@@ -11,7 +10,7 @@ const createTheme: CreateTheme = options => {
     typography: createTypography(options?.typographyOptions),
     palette: createPalette(options?.paletteOptions),
     spacing: createSpacing(options?.spacingOptions),
-    config: createConfig(options?.configOptions)
+    componentConfigOptions: options?.componentConfigOptions || {}
   }
 
   return awesomeTheme

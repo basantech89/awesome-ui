@@ -1,18 +1,20 @@
-import { Sizing } from '../shared/theme/themeEngine/componentConfig/componentConfig.types'
-import { CommonElementSize } from '../types'
+import { BrandColor, CommonElementSize } from '../types'
 import { SpacingFn } from '../shared/theme/themeEngine/createSpacing'
 import theme from '../shared/theme'
-import { CSSObject } from '@emotion/css'
-import { ShortDimensions, ShortDirections, ThemeBoxProps } from '../components/layout/box'
-import { cssDimensions, cssPropMap, directions } from '../constants/theme'
-import { deepMerge, get } from './object'
-import { upperCaseFirstLetter } from './primitive'
+import { brandColors } from '../constants/theme'
+import { PaletteColor } from '../shared/theme/themeEngine/palette.types'
+import { CSSColor } from '../shared/theme/theme.types'
+import isPropValid from '@emotion/is-prop-valid'
+import { Sizing } from '../shared/theme/themeEngine/componentConfig'
 
-declare interface SpacingSizing extends Sizing {}
+export declare interface SpacingSizing extends Sizing {}
 
-/* converts spacer to spacing as per provided or default spacing options to theme
-e.g - 4 spacer = 1 rem = 16px
-* */
+/**
+ * converts spacer to spacing as per provided or default spacing options to theme e.g - 4 spacer = 1 rem = 16px
+ * @param spacer - convert to spacing if number, else convert to respective size check if a common element size string i.e xs/sm/md/lg, returns it otherwise
+ * @param sizing - optional parameter to provide common element size mapping
+ * @param compute - optional compute function to convert number spacer to spacing size
+ */
 export const getSpacing = (
   spacer: string | number,
   sizing?: SpacingSizing,
@@ -32,12 +34,15 @@ export const getSpacing = (
   return spacer
 }
 
-/* extract spacer(spacing amount) and unit from spacing
+/* extract spacing amount and unit from spacer
+convert input to spacing if it's a number
 e.g getSpacingComponents(1.5rem): { amount: 1.5, unit: rem }
 * */
-export const getSpacingComponents = (spacing: string): { spacer: number; unit: string } => {
+export const getSpacingComponents = (spacer: string | number): { spacer: number; unit: string } => {
   let amount = ''
   let unit = ''
+
+  const spacing = getSpacing(spacer)
 
   for (const char of spacing) {
     if (char === '.' || (!Number.isNaN(Number(char)) && typeof Number(char) === 'number')) {
@@ -50,92 +55,23 @@ export const getSpacingComponents = (spacing: string): { spacer: number; unit: s
   return { spacer: Number(amount), unit }
 }
 
-declare type CSSDirection = 'top' | 'bottom' | 'left' | 'right'
+export const isStyleProp = (prop: string) => prop === 'color' || !isPropValid(prop)
+export const isHtmlProp = isPropValid
 
-const getSpacingStyles = (
-  prop: 'margin' | 'padding',
-  spacing: string,
-  ...directions: CSSDirection[]
-): CSSObject => {
-  const gaps = directions.reduce((styles, dir) => {
-    styles[`${prop}${upperCaseFirstLetter(dir)}`] = `-${spacing}`
-    return styles
-  }, {} as CSSObject)
-
-  gaps['> *'] = directions.reduce((styles, dir) => {
-    styles[`${prop}${upperCaseFirstLetter(dir)}`] = spacing
-    return styles
-  }, {} as CSSObject)
-
-  return gaps
-}
-
-export const applyParentChildSpacing = (
-  spacing: string,
-  dimension: ShortDimensions,
-  direction?: ShortDirections
-): CSSObject => {
-  const { spacer, unit } = getSpacingComponents(spacing)
-  const halfSpacing = `${spacer / 2}${unit}`
-  const cssDimension = cssDimensions[dimension]
-  const cssDirections = directions[direction ?? 'z']
-  return getSpacingStyles(cssDimension, halfSpacing, ...cssDirections)
-}
-
-export const expandCSS = ({ d, gap, gapX, gapY, ...rest }: ThemeBoxProps) => {
-  let styles: CSSObject = {}
-  if (d) {
-    styles = { ...styles, display: d }
-    if (d === 'flex' || d === 'inline-flex') {
-      if (gap) {
-        styles = { ...styles, ...applyParentChildSpacing(getSpacing(gap), 'm') }
-      } else {
-        if (gapX) {
-          styles = { ...styles, ...applyParentChildSpacing(getSpacing(gapX), 'm', 'x') }
-        }
-        if (gapY) {
-          styles = deepMerge(styles, applyParentChildSpacing(getSpacing(gapY), 'm', 'y'))
-        }
-      }
-    } else if (d === 'grid' || d === 'inline-grid') {
-      if (gap) {
-        styles = { ...styles, gap: getSpacing(gap) }
-      } else {
-        if (gapX) {
-          styles = { ...styles, columnGap: getSpacing(gapX) }
-        }
-        if (gapY) {
-          styles = { ...styles, rowGap: getSpacing(gapY) }
-        }
-      }
+/* get color value or color object from Brand Color * */
+export function getColor(color: BrandColor): PaletteColor
+export function getColor(color: BrandColor | CSSColor, intensity: keyof PaletteColor): CSSColor
+export function getColor(color: CSSColor): CSSColor
+export function getColor(color: BrandColor | CSSColor, intensity?: keyof PaletteColor) {
+  if (brandColors.includes(color as BrandColor)) {
+    if (intensity) {
+      return theme.palette[color as BrandColor][intensity]
+    } else {
+      return theme.palette[color as BrandColor]
     }
+  } else {
+    return color
   }
-
-  const otherStyles = Object.entries(rest).reduce((styles, [cssProp, cssValue]) => {
-    if (cssProp[0] === 'm' || cssProp[0] === 'p') {
-      return {
-        ...styles,
-        ...applyParentChildSpacing(
-          cssValue,
-          cssProp.charAt(0) as ShortDimensions,
-          cssProp.charAt(1) as ShortDirections
-        )
-      }
-    }
-
-    if (cssProp in cssPropMap) {
-      return {
-        ...styles,
-        [cssPropMap[cssProp as keyof typeof cssPropMap]]:
-          typeof cssValue === 'number' ? getSpacing(cssValue) : cssValue
-      }
-    }
-
-    return styles
-  }, {} as CSSObject)
-
-  return { ...styles, ...otherStyles }
 }
 
-export { getContrast as contrast } from 'polished'
-export { transparentize } from 'polished'
+export { getContrast as contrast, transparentize, darken, saturate } from 'polished'
