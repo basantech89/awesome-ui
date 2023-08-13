@@ -2,13 +2,13 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Meta, Story } from '@storybook/react'
 import * as React from 'react'
-import { BrandColor, CommonElementSize } from '../../../types'
 
-import { getDefaultButtonThemeOptions } from '../../../shared/theme/themeEngine/componentConfig/button'
 import Button, { ButtonProps, ButtonVariant } from '.'
-import theme from '../../../shared/theme'
 import Box from '../../layout/box'
 import { css } from '@emotion/css'
+import { getDefaultButtonThemeOptions } from '../../../shared/theme/engine/components/button'
+import { CommonElementSize } from '../../../constants/theme'
+import { defaultTheme as theme } from '../../../shared/theme/provider'
 
 const defaultButtonThemeOptions = getDefaultButtonThemeOptions(theme.spacing)
 
@@ -106,7 +106,12 @@ export const variants = ({ ...args }) => (
         <h3 style={{ paddingBottom: 10 }}> {capitalize(variant)} </h3>
         <Box d={display} gap={gap}>
           {buttonColors.map(color => (
-            <Button key={`${variant}-${color}`} {...args} color={color} variant={variant}>
+            <Button
+              key={`${variant}-${color}`}
+              {...args}
+              color={color}
+              variant={variant}
+            >
               {capitalize(color)}
             </Button>
           ))}
@@ -123,7 +128,13 @@ export const sizes = ({ ...args }) => (
         <h3 style={{ paddingBottom: 10 }}>{size}</h3>
         <Box d={display} gap={gap}>
           {buttonColors.map(color => (
-            <Button key={`${color}-${size}`} {...args} color={color} variant='solid' size={size}>
+            <Button
+              key={`${color}-${size}`}
+              {...args}
+              color={color}
+              variant="solid"
+              size={size}
+            >
               {capitalize(color)}
             </Button>
           ))}
@@ -144,7 +155,7 @@ export const shapes = ({ ...args }) => (
               key={`${color}-${shape}`}
               {...args}
               color={color}
-              variant='solid'
+              variant="solid"
               rounded={shape}
             >
               {capitalize(color)}
@@ -163,7 +174,13 @@ export const all = ({ ...args }) => (
         <h3 style={{ paddingBottom: 10 }}> {size} </h3>
         {buttonVariants.map(variant => (
           <div key={`${size}-${variant}`} style={{ padding: 20 }}>
-            <h4 style={{ paddingBottom: 10, display: 'inline-block', minWidth: 80 }}>
+            <h4
+              style={{
+                paddingBottom: 10,
+                display: 'inline-block',
+                minWidth: 80
+              }}
+            >
               {capitalize(variant)}
             </h4>
             <Box d={display} gapX={gap} gapY={gapY}>
@@ -205,10 +222,15 @@ export const loading = ({ ...args }) => (
     <Button {...args} loading>
       Loading Button
     </Button>
-    <Button {...args} loading spinnerPlacement='right'>
+    <Button {...args} loading spinnerPlacement="right">
       Loading Button
     </Button>
-    <Button {...args} loading loadingText='Loading Text' spinnerPlacement='right'>
+    <Button
+      {...args}
+      loading
+      loadingText="Loading Text"
+      spinnerPlacement="right"
+    >
       Loading Button
     </Button>
   </Box>
@@ -219,7 +241,11 @@ export const icon = ({ ...args }) => (
     <Button {...args} icon={<FontAwesomeIcon icon={faCoffee} />}>
       Coffee Mug
     </Button>
-    <Button {...args} icon={<FontAwesomeIcon icon={faCoffee} />} iconPlacement='right'>
+    <Button
+      {...args}
+      icon={<FontAwesomeIcon icon={faCoffee} />}
+      iconPlacement="right"
+    >
       Coffee Mug
     </Button>
   </Box>
@@ -232,7 +258,13 @@ export const disabled = ({ ...args }) => (
         <h3 style={{ paddingBottom: 10 }}> {capitalize(variant)} </h3>
         <Box d={display} gap={gap}>
           {buttonColors.map(color => (
-            <Button key={`${variant}-${color}`} {...args} color={color} variant={variant} disabled>
+            <Button
+              key={`${variant}-${color}`}
+              {...args}
+              color={color}
+              variant={variant}
+              disabled
+            >
               {capitalize(color)}
             </Button>
           ))}

@@ -1,11 +1,10 @@
 import React from 'react'
-import theme from '../src/shared/theme'
-import { ThemeProvider } from '@emotion/react'
-import GlobalStyles from '../src/shared/global'
+import AwesomeThemeProvider from "../src/shared/theme/provider";
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
+    expanded: true,
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/
@@ -15,15 +14,14 @@ export const parameters = {
 
 const withGlobalStyle = storyFn => (
   <>
-    <GlobalStyles />
     {storyFn()}
   </>
 )
 
 const withTheme = Story => (
-  <ThemeProvider theme={theme}>
+  <AwesomeThemeProvider>
     <Story />
-  </ThemeProvider>
+  </AwesomeThemeProvider>
 )
 
 export const decorators = [withGlobalStyle, withTheme]

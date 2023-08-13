@@ -1,16 +1,4 @@
-import { BrandColor, CommonElementSize } from '../types'
-
-export const brandColors: BrandColor[] = [
-  'primary',
-  'secondary',
-  'tertiary',
-  'success',
-  'info',
-  'warning',
-  'error'
-]
-
-export const commonSizes: CommonElementSize[] = ['xs', 'sm', 'md', 'lg']
+export const sizes = ['xs', 'sm', 'md', 'lg'] as const
 
 export const cssDimensions = {
   m: 'margin',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { CommonElementSize, HTMLProps } from '../../../types'
+import { ElementSize, HTMLProps } from '../../../shared/theme/types'
 import useAwesomeStyles from '../../../shared/theme/useAwesomeStyles'
 
 import { ThemeColor } from '../../../shared/theme/theme.types'
@@ -14,7 +14,7 @@ export declare interface DropdownOption extends HTMLProps<HTMLOptionElement> {
 }
 
 export declare interface ThemeSelectProps extends ThemeLabelProps {
-  size?: CommonElementSize
+  size?: ElementSize
   color?: ThemeColor
 }
 

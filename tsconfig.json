@@ -11,15 +11,13 @@
 		"jsx": "react",
 		"lib": ["dom", "esnext"],
 		"isolatedModules": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"baseUrl": "./src"
 	},
 	"exclude": [
 		"**/dist",
 		"node_modules",
-		"**/node_modules",
-		"**/*.spec.ts",
-		"**/__tests__",
-		"**/*.test.ts",
+		"**/node_modules"
 	],
 	"include": ["src"]
 }

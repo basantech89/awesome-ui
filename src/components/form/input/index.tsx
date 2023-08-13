@@ -4,7 +4,7 @@ import { css, CSSObject, cx } from '@emotion/css'
 import { getValidChildren } from '../../../utils/react'
 import { getColor } from '../../../utils/theme'
 import { ThemeColor } from '../../../shared/theme/theme.types'
-import { CommonElementSize, HTMLProps } from '../../../types'
+import { ElementSize, HTMLProps } from '../../../shared/theme/types'
 import Box, { BoxProps } from '../../layout/box'
 import { omit } from '../../../utils'
 import themingProps from '../../../constants/themingProps'
@@ -19,10 +19,14 @@ export interface ThemeInputProps {
   rounded?: boolean
   error?: boolean
   variant?: InputVariant
-  size?: CommonElementSize
+  size?: ElementSize
 }
 
-export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & ThemeInputProps
+export type InputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size'
+> &
+  ThemeInputProps
 
 export interface InputGroupProps extends HTMLProps<HTMLDivElement> {
   color?: ThemeColor
@@ -55,7 +59,12 @@ const addonCommonCss = (theme: Theme) => css`
   color: ${theme.palette.colors.text.dark.primary};
 `
 
-const InputLeftAddon: React.FC<InputAddonProps> = ({ children, className, addon, ...rest }) => {
+const InputLeftAddon: React.FC<InputAddonProps> = ({
+  children,
+  className,
+  addon,
+  ...rest
+}) => {
   const theme = useTheme()
   const styles = css`
     ${addonCommonCss(theme)}
@@ -70,7 +79,12 @@ const InputLeftAddon: React.FC<InputAddonProps> = ({ children, className, addon,
   )
 }
 
-const InputRightAddon: React.FC<InputAddonProps> = ({ children, className, addon, ...rest }) => {
+const InputRightAddon: React.FC<InputAddonProps> = ({
+  children,
+  className,
+  addon,
+  ...rest
+}) => {
   const theme = useTheme()
   const styles = css`
     ${addonCommonCss(theme)}
@@ -140,7 +154,9 @@ const InputRightExtension: React.FC<InputExtensionProps> = ({
 const Feedback: React.FC<FeedbackProps> = props => {
   const theme = useTheme()
   const _css = css`
-    color: ${props.error ? theme.palette.error['500'] : getColor(props.color || 'success', 500)};
+    color: ${props.error
+      ? theme.palette.error['500']
+      : getColor(props.color || 'success', 500)};
   `
   return <label className={cx(_css, props.className)}>{props.message}</label>
 }
@@ -150,11 +166,18 @@ const Input: React.FC<InputProps> = props => {
   const { styles } = useAwesomeStyles(otherProps, 'input')
 
   return (
-    <input className={cx(...styles.main, className)} {...omit(otherProps, themingProps.input)} />
+    <input
+      className={cx(...styles.main, className)}
+      {...omit(otherProps, themingProps.input)}
+    />
   )
 }
 
-const InputGroup: React.FC<InputGroupProps> = ({ children, className, ...rest }) => {
+const InputGroup: React.FC<InputGroupProps> = ({
+  children,
+  className,
+  ...rest
+}) => {
   const _css = css`
     display: flex;
     align-items: center;
@@ -166,9 +189,17 @@ const InputGroup: React.FC<InputGroupProps> = ({ children, className, ...rest })
   let inputIdx = -1
   validChildren.forEach((child, index) => {
     if (child.type === InputLeftAddon) {
-      inputStyles = { ...inputStyles, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
+      inputStyles = {
+        ...inputStyles,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0
+      }
     } else if (child.type === InputRightAddon) {
-      inputStyles = { ...inputStyles, borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+      inputStyles = {
+        ...inputStyles,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0
+      }
     } else if (child.type === InputLeftExtension) {
       inputStyles = { ...inputStyles, paddingLeft: 47 }
     } else if (child.type === InputRightExtension) {
@@ -247,7 +278,7 @@ const InputBox: React.FC<InputBoxProps> = ({
         `)}
       >
         {children}
-        {feedbackProps && <Feedback {...feedbackProps} className='feedback' />}
+        {feedbackProps && <Feedback {...feedbackProps} className="feedback" />}
       </div>
     </Box>
   )

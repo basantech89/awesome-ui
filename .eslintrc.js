@@ -4,25 +4,24 @@
 
 module.exports = {
   root: true,
-  extends: ['@awesome-tools/eslint-config'],
-  overrides: [
-    {
-      files: ['**/*.tsx', '**/*.ts'],
-      rules: {
-        'react/prop-types': 'off',
-        // note you must disable the base rule as it can report incorrect errors
-        'no-use-before-define': 'off',
-        '@typescript-eslint/no-use-before-define': ['error'],
-        '@typescript-eslint/no-unused-vars': 'off',
-        'no-unused-vars': 0,
-        '@typescript-eslint/no-unused-vars-experimental': 'error',
-        // note you must disable the base rule as it can report incorrect errors
-        'no-redeclare': 'off',
-        '@typescript-eslint/no-redeclare': ['error']
-      }
+  extends: ['@awesome-tools/eslint-config', 'plugin:storybook/recommended'],
+  overrides: [{
+    files: ['**/*.tsx', '**/*.ts'],
+    rules: {
+      'react/prop-types': 'off',
+      // note you must disable the base rule as it can report incorrect errors
+      'no-use-before-define': 'off',
+      '@typescript-eslint/no-use-before-define': ['error'],
+      '@typescript-eslint/no-unused-vars': 'error',
+      'no-unused-vars': 0,
+      '@typescript-eslint/no-unused-vars-experimental': 'off',
+      // note you must disable the base rule as it can report incorrect errors
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': ['error']
     }
-  ],
+  }],
   env: {
-    browser: true
+    browser: true,
+    jest: true
   }
-}
+};

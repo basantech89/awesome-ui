@@ -1,10 +1,15 @@
 import React from 'react'
 import { css, CSSObject, cx } from '@emotion/css'
-import { HTMLProps } from '../../../types'
+import { HTMLProps } from '../../../shared/theme/types'
 import { cssDimensions, cssPropMap, directions } from '../../../constants/theme'
 import { upperCaseFirstLetter } from '../../../utils/primitive'
 import { mapKeys } from '../../../utils'
-import { getSpacing, getSpacingComponents, isHtmlProp, isStyleProp } from '../../../utils/theme'
+import {
+  getSpacing,
+  getSpacingComponents,
+  isHtmlProp,
+  isStyleProp
+} from '../../../utils/theme'
 
 export declare type ShortDimension = 'm' | 'p'
 export declare type ShortDirection = 't' | 'b' | 'l' | 'r' | 'x' | 'y'
@@ -22,7 +27,9 @@ export declare interface ThemeBoxProps extends Partial<DimensionDirection> {
   flexDirection?: React.CSSProperties['flexDirection']
 }
 
-export declare interface BoxProps extends ThemeBoxProps, HTMLProps<HTMLDivElement> {}
+export declare interface BoxProps
+  extends ThemeBoxProps,
+    HTMLProps<HTMLDivElement> {}
 
 declare interface ApplySpacingParams {
   spacing: string
@@ -84,7 +91,11 @@ export const extractCSSAndAttributes = ({
         }
       })
     } else if (d === 'grid' || d === 'inline-grid') {
-      const gapTypes = mapKeys({ gap, gapX, gapY }, ['gap', 'columnGap', 'rowGap'])
+      const gapTypes = mapKeys({ gap, gapX, gapY }, [
+        'gap',
+        'columnGap',
+        'rowGap'
+      ])
       Object.entries(gapTypes).forEach(([gapType, value]) => {
         spacing = {
           ...spacing,
@@ -111,7 +122,8 @@ export const extractCSSAndAttributes = ({
         props.css[cssPropMap[prop as keyof typeof cssPropMap]] =
           typeof spacing === 'number' ? getSpacing(spacing) : spacing
       } else if (isStyleProp(prop)) {
-        props.css[prop] = typeof spacing === 'number' ? getSpacing(spacing) : spacing
+        props.css[prop] =
+          typeof spacing === 'number' ? getSpacing(spacing) : spacing
       } else if (isHtmlProp(prop)) {
         props.attributes[prop] = spacing
       }

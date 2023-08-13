@@ -1,5 +1,5 @@
 import React from 'react'
-import { CommonElementSize, HTMLProps } from '../../../types'
+import { ElementSize, HTMLProps } from '../../../shared/theme/types'
 import useAwesomeStyles from '../../../shared/theme/useAwesomeStyles'
 import { css, cx } from '@emotion/css'
 
@@ -20,17 +20,29 @@ export declare interface DropdownOption extends HTMLProps<HTMLOptionElement> {
 }
 
 export declare interface ThemeAutoCompleteProps {
-  size?: CommonElementSize
+  size?: ElementSize
 }
 
-export declare interface AutoCompleteProps extends ThemeAutoCompleteProps, InputBoxProps {
+export declare interface AutoCompleteProps
+  extends ThemeAutoCompleteProps,
+    InputBoxProps {
   options: DropdownOption[]
   id: string
   inputProps: InputProps
 }
 
 const AutoComplete: React.FC<AutoCompleteProps> = props => {
-  const { children, className, label, id, spacing, direction, inputProps, options, ...rest } = props
+  const {
+    children,
+    className,
+    label,
+    id,
+    spacing,
+    direction,
+    inputProps,
+    options,
+    ...rest
+  } = props
   const { styles } = useAwesomeStyles(rest, 'autoComplete')
   const color = getColor(rest.color || 'primary')
 
@@ -89,14 +101,19 @@ const AutoComplete: React.FC<AutoCompleteProps> = props => {
   }
 
   return (
-    <InputBox htmlFor={id} label={label} spacing={spacing} direction={direction}>
+    <InputBox
+      htmlFor={id}
+      label={label}
+      spacing={spacing}
+      direction={direction}
+    >
       <InputGroup>
         <Input
           id={id}
-          placeholder='Select'
+          placeholder="Select"
           onChange={handleChange}
           rounded
-          color='primary'
+          color="primary"
           {...inputProps}
         />
         {/*<InputRightExtension*/}

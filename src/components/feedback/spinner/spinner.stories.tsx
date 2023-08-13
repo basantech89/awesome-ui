@@ -1,60 +1,82 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 import * as React from 'react'
 
-import Spinner, { SpinnerProps } from '.'
-import Box from '../../layout/box'
+import { Spinner } from '.'
 
-export default {
+const meta = {
   title: 'Awesome UI/Feedback/Spinner',
   component: Spinner,
-  parameters: {
-    docs: {
-      description: {
-        component: "Spinner to show on a component's loading state"
-      }
-    }
-  },
+  tags: ['autodocs'],
   argTypes: {
-    color: {
-      table: {
-        category: 'Color'
-      }
-    },
-    size: {
-      control: { type: 'text' },
-      defaultValue: '1.5rem'
-    },
-    speed: {
-      control: { type: 'text' },
-      defaultValue: '0.5s'
-    },
-    thickness: {
-      control: { type: 'text' },
-      defaultValue: '2px'
-    }
+    color: { control: 'color' },
+    size: { control: 'text' }
   }
-} as Meta
+} satisfies Meta<typeof Spinner>
 
-const Template: Story<SpinnerProps> = args => <Spinner {...args} />
+export default meta
 
-export const Color = Template.bind({})
-Color.args = {
-  color: 'primary'
+type Story = StoryObj<typeof Spinner>
+
+export const WithControls: Story = {
+  args: {
+    color: 'primary',
+    size: 'sm',
+    speed: '0.5s',
+    thickness: '2px'
+  }
 }
 
-export const Size = Template.bind({})
-Size.args = {
-  color: 'secondary',
-  size: '2rem'
+export const Colors: Story = {
+  args: {
+    size: 'sm',
+    speed: '0.5s',
+    thickness: '2px'
+  },
+  render: args => (
+    <>
+      <Spinner color="primary" {...args} />
+      <Spinner color="secondary" {...args} />
+      <Spinner color="tertiary" {...args} />
+      <Spinner color="success" {...args} />
+      <Spinner color="info" {...args} />
+      <Spinner color="warning" {...args} />
+      <Spinner color="error" {...args} />
+      <Spinner color="flamingo" {...args} />
+      <Spinner color="onyx" {...args} />
+      <Spinner color="aqua" {...args} />
+      <Spinner color="#33EEAA" {...args} />
+    </>
+  )
 }
 
-export const variants = ({ ...args }) => (
-  <Box>
-    <Spinner {...args} color='primary' size='xs' />
-    <Spinner {...args} color='secondary' size='sm' />
-    <Spinner {...args} color='tertiary' size='md' />
-    <Spinner {...args} color='warning' size='lg' />
-    <Spinner {...args} color='error' size={9} />
-    <Spinner {...args} color='success' size='3rem' />
-  </Box>
-)
+export const Sizes: Story = {
+  args: {
+    color: 'primary',
+    speed: '0.5s',
+    thickness: '2px'
+  },
+  render: args => (
+    <>
+      <Spinner size="xs" {...args} />
+      <Spinner {...args} />
+      <Spinner size="md" {...args} />
+      <Spinner size="lg" {...args} />
+    </>
+  )
+}
+
+export const Speed: Story = {
+  args: {
+    color: 'primary',
+    size: 'sm',
+    thickness: '2px'
+  },
+  render: args => (
+    <>
+      <Spinner speed="2s" {...args} />
+      <Spinner speed="1s" {...args} />
+      <Spinner speed="0.5s" {...args} />
+      <Spinner speed="0.3s" {...args} />
+    </>
+  )
+}

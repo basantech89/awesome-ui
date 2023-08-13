@@ -1,63 +1,51 @@
-import { isFaulty, isObject } from './assertion'
+import { isObject } from './assertion'
 
-type TUnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
-  ? I
-  : never
+export type Dict = Record<string | number | symbol, any>
 
-export const deepMerge = <T extends Record<string, any>[]>(
-  ...objects: T
-): TUnionToIntersection<T[number]> =>
-  objects.reduce((result, current) => {
-    Object.keys(current).forEach(key => {
-      if (Array.isArray(result[key]) && Array.isArray(current[key])) {
-        result[key] = Array.from(new Set(result[key].concat(current[key])))
-      } else if (isObject(result[key]) && isObject(current[key])) {
-        result[key] = deepMerge(result[key], current[key])
-      } else if (!isFaulty(current[key])) {
-        result[key] = current[key]
+export const getKeys = <T extends object>(obj: T) =>
+  Object.keys(obj) as (keyof typeof obj)[]
+
+export const hasOwn = <Obj extends object>(
+  obj: Obj,
+  k: PropertyKey
+): k is keyof Obj => Object.hasOwn(obj, k)
+
+type DeepMerge<S extends Dict, D extends Dict> = {
+  [K in keyof S]: S[K]
+} &
+  {
+    [K in keyof D as D[K] extends null | undefined
+      ? never
+      : K]: D[K] extends Dict ? DeepMerge<S[K], D[K]> : D[K]
+  }
+
+export const deepMerge = <S extends Dict, D extends Dict>(
+  source: S,
+  destination: D
+) =>
+  getKeys(destination).reduce<DeepMerge<S, D>>(
+    (merged, key) => {
+      const value = destination[key]
+      if (isObject(value)) {
+        merged[key] = deepMerge(source?.[key], value) as any
+      } else if (value) {
+        merged[key] = value
       }
-    })
 
-    return result
-  }, {}) as any
+      return merged
+    },
+    { ...source }
+  )
 
-// export const deepMerge: DeepMerge = <
-//   T extends Record<string, unknown>,
-//   S extends Record<string, unknown>
-// >(
-//   target: T,
-//   ...sources: S[]
-// ) => {
-//   if (!sources.length) {
-//     return target
-//   }
-//
-//   if (isObject(target)) {
-//     // making sure to not change target (immutable)
-//     const output = { ...target }
-//     sources.forEach(source => {
-//       if (isObject(source)) {
-//         Object.keys(source).forEach(key => {
-//           if (isObject(source[key])) {
-//             if (!output[key]) {
-//               output[key] = { ...(source[key] as Object) }
-//             } else {
-//               output[key] = deepMerge(output[key], source[key])
-//             }
-//           } else if (!isFaulty(source[key])) {
-//             output[key] = source[key]
-//           }
-//         })
-//       }
-//     })
-//     return output
-//   }
-// }
-
-type Get = (obj: Record<string, any>, path: string | number, fallback?: any) => any
+type Get = (
+  obj: Record<string, any>,
+  path: string | number,
+  fallback?: any
+) => any
 
 export const get: Get = (obj, path, fallback) => {
-  const keys: Array<string | number> = typeof path === 'string' ? path.split('.') : [path]
+  const keys: Array<string | number> =
+    typeof path === 'string' ? path.split('.') : [path]
 
   if (!obj) {
     return fallback ?? null

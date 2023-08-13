@@ -1,29 +1,30 @@
-import { useTheme } from '@emotion/react'
-import componentConfigCollection, {
-  ComponentConfig,
-  DefaultComponentConfigOptions,
-  defaultComponentConfigOptions
-} from './themeEngine/componentConfig'
-import { deepMerge, get } from '../../utils'
-import { valueOrFn } from '../../utils/primitive'
+import {
+  ComponentConfigGenerator,
+  componentMethods,
+  ComponentOptions
+} from './engine/components'
+import { deepMerge } from '../../utils'
+import { useAwesomeTheme } from './provider'
+import { SpinnerProps } from '../../components/feedback/spinner'
+import { ButtonProps } from '../../components/form'
 
-const useAwesomeStyles = <P extends Object, K extends keyof DefaultComponentConfigOptions>(
-  props: P,
+type ComponentProps = {
+  spinner: Omit<SpinnerProps, 'className'>
+  button: Omit<ButtonProps, 'className'>
+}
+
+const useAwesomeStyles = <K extends keyof ComponentOptions>(
+  props: ComponentProps[K],
   componentKey: K
-): ComponentConfig<K> => {
-  const { componentConfigOptions, ...theme } = useTheme()
+): ReturnType<ComponentConfigGenerator[K]> => {
+  const theme = useAwesomeTheme()
 
-  const defaultOptions = get(defaultComponentConfigOptions, componentKey)
-  const defaultConfigOptions = valueOrFn(defaultOptions, theme.spacing)
+  const options = theme.components[componentKey]
 
-  const options = get(componentConfigOptions || {}, componentKey, {})
-  const configOptions = valueOrFn(options, theme.spacing)
+  const mergedProps = deepMerge(options.default, props)
 
-  const mergedOptions = deepMerge(defaultConfigOptions, configOptions)
-  const mergedProps = deepMerge(mergedOptions.default, props)
-
-  const config = get(componentConfigCollection, componentKey, {})
-  return config({ props: mergedProps, options: mergedOptions, ...theme })
+  const config = componentMethods[componentKey]
+  return config(mergedProps, options, theme)
 }
 
 export default useAwesomeStyles

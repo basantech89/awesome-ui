@@ -1,27 +1,31 @@
 import { css, cx } from '@emotion/css'
 import React from 'react'
 
-import { BrandColor, CommonElementPlacement, CommonElementSize } from '../../../types'
 import Spinner from '../../feedback/spinner'
 import { omit } from '../../../utils'
 import themingProps from '../../../constants/themingProps'
 import useAwesomeStyles from '../../../shared/theme/useAwesomeStyles'
+import { Color } from '../../../shared/theme/engine/colors'
+import {
+  ElementPlacement,
+  ElementSize
+} from '../../../shared/theme/theme.types'
 
 export declare type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'link'
 
 export interface ThemeButtonProps {
-  size?: CommonElementSize
-  color?: BrandColor
-  variant?: ButtonVariant
-  rounded?: boolean
+  color?: Color
+  icon?: React.ReactElement
+  iconPlacement?: ElementPlacement
+  iconSpacing?: string
   loading?: boolean
   loadingText?: string
-  icon?: React.ReactElement
-  iconPlacement?: CommonElementPlacement
-  iconSpacing?: string
+  rounded?: boolean
+  size?: ElementSize
   spinner?: React.ReactNode
-  spinnerPlacement?: CommonElementPlacement
+  spinnerPlacement?: ElementPlacement
   spinnerSpacing?: string
+  variant?: ButtonVariant
 }
 
 export type ButtonProps = ThemeButtonProps &
@@ -29,12 +33,18 @@ export type ButtonProps = ThemeButtonProps &
 
 declare interface ButtonIconProps {
   spacing: string
-  placement: CommonElementPlacement
+  placement: ElementPlacement
 }
 
-const ButtonIcon: React.FC<ButtonIconProps> = ({ children, spacing, placement }) => {
+const ButtonIcon: React.FC<ButtonIconProps> = ({
+  children,
+  spacing,
+  placement
+}) => {
   const className = css`
-    ${placement === 'left' ? `margin-right: ${spacing}` : `margin-left: ${spacing}`}
+    ${placement === 'left'
+      ? `margin-right: ${spacing}`
+      : `margin-left: ${spacing}`}
   `
 
   return React.isValidElement(children)
@@ -46,12 +56,15 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({ children, spacing, placement })
     : null
 }
 
-const AwesomeButton: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
-  props,
-  ref
-) => {
+const AwesomeButton: React.ForwardRefRenderFunction<
+  HTMLButtonElement,
+  ButtonProps
+> = (props, ref) => {
   const { children, className, ...otherProps } = props
-  const { componentOptions, styles } = useAwesomeStyles<ButtonProps, 'button'>(otherProps, 'button')
+  const { componentOptions, styles } = useAwesomeStyles<ButtonProps, 'button'>(
+    otherProps,
+    'button'
+  )
 
   const {
     size,
@@ -75,7 +88,7 @@ const AwesomeButton: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonPro
   return (
     <button
       ref={ref}
-      type='button'
+      type="button"
       className={cx(...styles.main, className)}
       {...omit(rest, themingProps.button)}
     >
@@ -86,13 +99,21 @@ const AwesomeButton: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonPro
       )}
 
       {(loading && spinnerPlacement === 'left' && spinner) ?? (
-        <Spinner className={cx(spinnerClassName)} color={spinnerColor} size={spinnerSize} />
+        <Spinner
+          className={cx(spinnerClassName)}
+          color={spinnerColor}
+          size={spinnerSize}
+        />
       )}
 
       {loading && loadingText ? loadingText : children}
 
       {(loading && spinnerPlacement === 'right' && spinner) ?? (
-        <Spinner className={cx(spinnerClassName)} color={spinnerColor} size={spinnerSize} />
+        <Spinner
+          className={cx(spinnerClassName)}
+          color={spinnerColor}
+          size={spinnerSize}
+        />
       )}
 
       {!loading && icon && iconPlacement === 'right' && (
